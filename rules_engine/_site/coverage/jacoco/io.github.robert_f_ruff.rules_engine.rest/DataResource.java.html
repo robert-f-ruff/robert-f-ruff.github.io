@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DataResource.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Rules Engine</a> &gt; <a href="index.source.html" class="el_package">io.github.robert_f_ruff.rules_engine.rest</a> &gt; <span class="el_source">DataResource.java</span></div><h1>DataResource.java</h1><pre class="source lang-java linenums">package io.github.robert_f_ruff.rules_engine.rest;
+
+import io.github.robert_f_ruff.rules_engine.Engine;
+import io.github.robert_f_ruff.rules_engine.logic.ObservationData;
+import io.github.robert_f_ruff.rules_engine.logic.PatientData;
+
+import jakarta.inject.Inject;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+
+/**
+ * Provide a REST interface for the rules engine to receive data from external clients.
+ * @author Robert F. Ruff
+ * @version 1.0
+ */
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
+@Path(&quot;data&quot;)
+public class DataResource {
+  Engine engine;
+
+  /**
+   * Run the engine with the received data object.
+   * @param patient The data object instance to evaluate
+   * @return Status of processing the data
+   * @since 1.0
+   */
+  @POST
+  @Path(&quot;patient&quot;)
+  public EngineResponse processPatient(@NotNull @Valid PatientData patient) {
+<span class="fc" id="L36">      engine.run(patient);</span>
+<span class="fc" id="L37">      return new EngineResponse(EngineResource.Status.OK);</span>
+  }
+
+  /**
+   * Run the engine with the received data object.
+   * @param observation The data object instance to evaluate
+   * @return Status of processing the data
+   * @since 1.0
+   */
+  @POST
+  @Path(&quot;observation&quot;)
+  public EngineResponse processObservation(@NotNull @Valid ObservationData observation) {
+<span class="fc" id="L49">      engine.run(observation);</span>
+<span class="fc" id="L50">      return new EngineResponse(EngineResource.Status.OK);</span>
+  }
+
+  /**
+   * New instance of DataResource.
+   * @param engine Instance of Engine that will process the rule set.
+   * @since 1.0
+   */
+  @Inject
+<span class="fc" id="L59">  public DataResource(Engine engine) {</span>
+<span class="fc" id="L60">    this.engine = engine;</span>
+<span class="fc" id="L61">  }</span>
+
+  /**
+   * New instance of DataResource.
+   * @since 1.0
+   */
+<span class="fc" id="L67">  public DataResource() {</span>
+<span class="fc" id="L68">    this.engine = null;</span>
+<span class="fc" id="L69">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

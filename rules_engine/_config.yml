@@ -1,0 +1,11 @@
+title: Rules Engine
+description: Taking action one criterion at a time
+show_downloads: false
+google_analytics:
+theme: jekyll-theme-leap-day
+github:
+  repository_url: https://github.com/robert-f-ruff/rules_engine
+  owner_name: Robert F. Ruff
+  zip_url:
+  tar_url:
+baseurl: /rules_engine/

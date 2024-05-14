@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RuleCriterionDataTransfer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Rules Engine</a> &gt; <a href="index.source.html" class="el_package">io.github.robert_f_ruff.rules_engine.loader</a> &gt; <span class="el_source">RuleCriterionDataTransfer.java</span></div><h1>RuleCriterionDataTransfer.java</h1><pre class="source lang-java linenums">package io.github.robert_f_ruff.rules_engine.loader;
+
+import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+/**
+ * Defines a single record returned from the database by the RuleCriteria named query.
+ * @author Robert F. Ruff
+ * @version 1.0
+ */
+public class RuleCriterionDataTransfer {
+  private Long ruleId;
+  private String ruleName;
+  private String criterionName;
+  private String criterionLogicClassName;
+  private String criterionLogicMethodName;
+  private String criterionLogicCheckValue;
+
+  /**
+   * Returns the rule's unique identifier.
+   * @return The unique identifier number for this record's rule
+   * @since 1.0
+   */
+  public Long getRuleId() {
+<span class="fc" id="L26">    return ruleId;</span>
+  }
+
+  /**
+   * Returns the name of the rule.
+   * @return The name of this rule
+   * @since 1.0
+   */
+  public String getRuleName() {
+<span class="fc" id="L35">    return ruleName;</span>
+  }
+
+  /**
+   * Returns the criterion name.
+   * @return The name of this criterion, as presented in the rules editor
+   * @since 1.0
+   */
+  public String getCriterionName() {
+<span class="fc" id="L44">    return criterionName;</span>
+  }
+
+  /**
+   * Returns the criterion's logic class name.
+   * @return Name of the class implementing the Logic interface that contains the logic to execute
+   * @since 1.0
+   */
+  public String getCriterionLogicClassName() {
+<span class="fc" id="L53">    return criterionLogicClassName;</span>
+  }
+
+  /**
+   * Returns the internal method name of the criterion's logic class.
+   * @return Name of the method to execute when this criterion is evaluated
+   * @since 1.0
+   */
+  public String getCriterionLogicMethodName() {
+<span class="fc" id="L62">    return criterionLogicMethodName;</span>
+  }
+  
+  /**
+   * Returns the comparison value.
+   * @return Value passed to the method to execute for use in comparison
+   * @since 1.0
+   */
+  public String getCriterionLogicCheckValue() {
+<span class="fc" id="L71">    return criterionLogicCheckValue;</span>
+  }
+
+  /**
+   * New instance of RuleCriterionDataTransfer.
+   * @param ruleId The unique identifier number for this record's rule
+   * @param ruleName The name of this rule
+   * @param criterionName The name of this criterion, as presented in the rules editor
+   * @param criterionLogic The logic for this criterion, formatted as
+   *     {@code ClassName.methodName=checkValue}, where {@code ClassName} is the name of the class
+   *     implementing the Logic interface, {@code methodName} is the name of the method to execute
+   *     when this criterion is evaluated, and {@code checkValue} is an optional value passed to
+   *     {@code methodName} for use in comparison
+   * @since 1.0
+   */
+<span class="fc" id="L86">  RuleCriterionDataTransfer(Long ruleId, String ruleName, String criterionName,</span>
+      String criterionLogic) {
+<span class="fc" id="L88">    this.ruleId = ruleId;</span>
+<span class="fc" id="L89">    this.ruleName = ruleName;</span>
+<span class="fc" id="L90">    this.criterionName = criterionName;</span>
+<span class="fc bfc" id="L91" title="All 2 branches covered.">    if (criterionLogic != null) {</span>
+<span class="fc" id="L92">      Pattern logicPattern = Pattern.compile(&quot;\\A([A-za-z]+)\\.{1}([A-Za-z]+)={0,1}(.*)\\z&quot;);</span>
+<span class="fc" id="L93">      Matcher logicMatcher = logicPattern.matcher(criterionLogic);</span>
+<span class="fc bfc" id="L94" title="All 2 branches covered.">      if (logicMatcher.find()) {</span>
+<span class="fc" id="L95">        this.criterionLogicClassName = logicMatcher.group(1);</span>
+<span class="fc" id="L96">        this.criterionLogicMethodName = logicMatcher.group(2);</span>
+<span class="fc" id="L97">        this.criterionLogicCheckValue = logicMatcher.group(3);</span>
+<span class="fc" id="L98">      } else {</span>
+<span class="fc" id="L99">        this.criterionLogicClassName = &quot;&quot;;</span>
+<span class="fc" id="L100">        this.criterionLogicMethodName = &quot;&quot;;</span>
+<span class="fc" id="L101">        this.criterionLogicCheckValue = &quot;&quot;;</span>
+      }
+<span class="fc" id="L103">    } else {</span>
+<span class="fc" id="L104">      this.criterionLogicClassName = &quot;&quot;;</span>
+<span class="fc" id="L105">      this.criterionLogicMethodName = &quot;&quot;;</span>
+<span class="fc" id="L106">      this.criterionLogicCheckValue = &quot;&quot;;</span>
+    }
+<span class="fc" id="L108">  }</span>
+
+  /**
+   * Indicates whether some other object is &quot;equal to&quot; this one.
+   * @param o The object instance to compare to this instance
+   * @return Whether the comparison object instance is equal to this instance
+   * @since 1.0
+   */
+  @Override
+	public boolean equals(Object o) {
+<span class="fc bfc" id="L118" title="All 2 branches covered.">		if (this == o) return true;</span>
+<span class="fc bfc" id="L119" title="All 4 branches covered.">		if (o == null || getClass() != o.getClass()) return false;</span>
+<span class="fc" id="L120">		RuleCriterionDataTransfer dto = (RuleCriterionDataTransfer) o;</span>
+<span class="fc bfc" id="L121" title="All 2 branches covered.">		return Objects.equals(ruleId, dto.getRuleId())</span>
+<span class="fc bfc" id="L122" title="All 2 branches covered.">        &amp;&amp; Objects.equals(ruleName, dto.getRuleName())</span>
+<span class="fc bfc" id="L123" title="All 2 branches covered.">        &amp;&amp; Objects.equals(criterionName, dto.getCriterionName())</span>
+<span class="fc bfc" id="L124" title="All 2 branches covered.">        &amp;&amp; Objects.equals(criterionLogicClassName, dto.getCriterionLogicClassName())</span>
+<span class="fc bfc" id="L125" title="All 2 branches covered.">        &amp;&amp; Objects.equals(criterionLogicMethodName, dto.getCriterionLogicMethodName())</span>
+<span class="fc bfc" id="L126" title="All 2 branches covered.">        &amp;&amp; Objects.equals(criterionLogicCheckValue, dto.getCriterionLogicCheckValue());</span>
+	}
+
+  /**
+   * Returns a hash code value for the object.
+   * @return Hash code value for this object instance
+   * @since 1.0
+   */
+  @Override
+	public int hashCode() {
+<span class="fc" id="L136">    return Objects.hash(ruleId, ruleName, criterionName, criterionLogicClassName,</span>
+<span class="fc" id="L137">        criterionLogicMethodName, criterionLogicCheckValue);</span>
+  }
+
+  /**
+   * Returns a string representation of the object.
+   * @return String representation of this object instance and its field values
+   * @since 1.0
+   */
+  @Override
+  public String toString() {
+<span class="fc" id="L147">    return &quot;RuleCriterionDataTransfer [ruleId=&quot; + ruleId + &quot;, ruleName=&quot; + ruleName</span>
+<span class="fc" id="L148">        + &quot;, criterionName=&quot; + criterionName + &quot;, criterionLogicClassName=&quot;</span>
+<span class="fc" id="L149">        + criterionLogicClassName + &quot;, criterionLogicMethodName=&quot; + criterionLogicMethodName</span>
+<span class="fc" id="L150">        + &quot;, criterionLogicCheckValue=&quot; + criterionLogicCheckValue + &quot;]&quot;;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
