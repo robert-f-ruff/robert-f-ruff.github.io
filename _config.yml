@@ -6,6 +6,7 @@ remote_theme: pages-themes/leap-day@v0.2.0
 plugins:
 - jekyll-remote-theme
 github:
+  is_project_page: true
   owner_name: Robert F. Ruff
   zip_url:
   tar_url:
