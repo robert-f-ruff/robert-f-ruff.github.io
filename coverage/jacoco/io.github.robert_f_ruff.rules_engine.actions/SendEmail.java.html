@@ -7,10 +7,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import org.springframework.lang.NonNull;
+import org.springframework.mail.MailException;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessagePreparator;
+
 import jakarta.mail.Message;
-import jakarta.mail.MessagingException;
-import jakarta.mail.Session;
-import jakarta.mail.Transport;
 import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
@@ -18,10 +20,10 @@ import jakarta.mail.internet.MimeMessage;
 /**
  * Defines the act of sending an email message.
  * @author Robert F. Ruff
- * @version 1.0
+ * @version 1.1
  */
 public class SendEmail implements Action {
-  private Session session;
+  private JavaMailSender mailSender;
   private InternetAddress fromAddress;
   private HashMap&lt;Message.RecipientType, List&lt;InternetAddress&gt;&gt; parameters;
   
@@ -34,25 +36,25 @@ public class SendEmail implements Action {
    */
   @Override
   public void addParameter(String name, String value) throws ParameterException {
-<span class="fc" id="L37">    Message.RecipientType type = null;</span>
-<span class="fc bfc" id="L38" title="All 3 branches covered.">    switch (name) {</span>
+<span class="fc" id="L39">    Message.RecipientType type = null;</span>
+<span class="fc bfc" id="L40" title="All 3 branches covered.">    switch (name) {</span>
       case &quot;Send Email to&quot;:
-<span class="fc" id="L40">        type = Message.RecipientType.TO;</span>
-<span class="fc" id="L41">        break;</span>
+<span class="fc" id="L42">        type = Message.RecipientType.TO;</span>
+<span class="fc" id="L43">        break;</span>
       case &quot;Copy Email to&quot;:
-<span class="fc" id="L43">        type = Message.RecipientType.CC;</span>
-<span class="fc" id="L44">        break;</span>
+<span class="fc" id="L45">        type = Message.RecipientType.CC;</span>
+<span class="fc" id="L46">        break;</span>
       default:
-<span class="fc" id="L46">        throw new ParameterException(&quot;Invalid parameter name: &quot; + name);</span>
+<span class="fc" id="L48">        throw new ParameterException(&quot;Invalid parameter name: &quot; + name);</span>
     }
     try {
-<span class="fc bfc" id="L49" title="All 2 branches covered.">      if (! parameters.containsKey(type)) parameters.put(type, new ArrayList&lt;&gt;());</span>
-<span class="fc" id="L50">      parameters.get(type).add(new InternetAddress(value, true));</span>
-<span class="fc" id="L51">    } catch (AddressException e) {</span>
-<span class="fc" id="L52">      throw new ParameterException(&quot;SendEmail - Invalid &quot; + name + &quot; address &quot;</span>
-<span class="fc" id="L53">          + value + &quot;: &quot; + e.getMessage());</span>
-    }
-<span class="fc" id="L55">  }</span>
+<span class="fc bfc" id="L51" title="All 2 branches covered.">      if (! parameters.containsKey(type)) parameters.put(type, new ArrayList&lt;&gt;());</span>
+<span class="fc" id="L52">      parameters.get(type).add(new InternetAddress(value, true));</span>
+<span class="fc" id="L53">    } catch (AddressException e) {</span>
+<span class="fc" id="L54">      throw new ParameterException(&quot;SendEmail - Invalid &quot; + name + &quot; address &quot;</span>
+<span class="fc" id="L55">          + value + &quot;: &quot; + e.getMessage());</span>
+<span class="fc" id="L56">    }</span>
+<span class="fc" id="L57">  }</span>
 
   /**
    * Generate and send the email message.
@@ -61,55 +63,37 @@ public class SendEmail implements Action {
    */
   @Override
   public void execute() throws ActionException {
-<span class="fc" id="L64">    Message message = new MimeMessage(session);</span>
+<span class="fc" id="L66">    MimeMessagePreparator message = new MimeMessagePreparator() {</span>
+      public void prepare(@NonNull MimeMessage mimeMessage) throws Exception {
+<span class="fc" id="L68">        mimeMessage.setFrom(fromAddress);</span>
+<span class="fc" id="L69">        Iterator&lt;Map.Entry&lt;Message.RecipientType, List&lt;InternetAddress&gt;&gt;&gt; entries = parameters.entrySet().iterator();</span>
+<span class="fc bfc" id="L70" title="All 2 branches covered.">        while (entries.hasNext()) {</span>
+<span class="fc" id="L71">          Map.Entry&lt;Message.RecipientType, List&lt;InternetAddress&gt;&gt; entry = entries.next();</span>
+<span class="fc" id="L72">          InternetAddress[] addresses = entry.getValue().toArray(new InternetAddress[entry.getValue().size()]);</span>
+<span class="fc" id="L73">          mimeMessage.setRecipients(entry.getKey(), addresses);</span>
+<span class="fc" id="L74">        }</span>
+<span class="fc" id="L75">        mimeMessage.setSubject(&quot;Rules Engine&quot;);</span>
+<span class="fc" id="L76">        mimeMessage.setContent(&quot;An applicable rule sent this message.&quot;, &quot;text/plain&quot;);</span>
+<span class="fc" id="L77">      }</span>
+    };
     try {
-<span class="fc" id="L66">      message.setFrom(fromAddress);</span>
-<span class="pc" id="L67">    } catch (MessagingException e) {</span>
-<span class="nc" id="L68">      throw new ActionException(&quot;SendEmail - Unable to set the from value &quot; + fromAddress</span>
-<span class="nc" id="L69">          + &quot;: &quot; + e.getMessage());</span>
-    }
-<span class="fc" id="L71">    Iterator&lt;Map.Entry&lt;Message.RecipientType, List&lt;InternetAddress&gt;&gt;&gt; entries</span>
-<span class="fc" id="L72">        = parameters.entrySet().iterator();</span>
-<span class="fc bfc" id="L73" title="All 2 branches covered.">    while (entries.hasNext()) {</span>
-<span class="fc" id="L74">      Map.Entry&lt;Message.RecipientType, List&lt;InternetAddress&gt;&gt; entry = entries.next();</span>
-      try {
-<span class="fc bfc" id="L76" title="All 2 branches covered.">        for (InternetAddress address : entry.getValue()) {</span>
-<span class="fc" id="L77">          message.addRecipient(entry.getKey(), address);</span>
-        }
-<span class="pc" id="L79">      } catch (MessagingException e) {</span>
-<span class="nc" id="L80">        throw new ActionException((&quot;SendEmail - Unable to add recipient: &quot; + e.getMessage()));</span>
-      }
-    }
-    try {
-<span class="fc" id="L84">      message.setSubject(&quot;Rules Engine&quot;);</span>
-<span class="pc" id="L85">    } catch (MessagingException e) {</span>
-<span class="nc" id="L86">      throw new ActionException(&quot;SendEmail - Unable to set the message subject: &quot;</span>
-<span class="nc" id="L87">          + e.getMessage());</span>
-    }
-    try {
-<span class="fc" id="L90">      message.setContent(&quot;An applicable rule sent this message.&quot;, &quot;text/plain&quot;);</span>
-<span class="pc" id="L91">    } catch (MessagingException e) {</span>
-<span class="nc" id="L92">      throw new ActionException(&quot;SendEmail - Unable to set the message content: &quot;</span>
-<span class="nc" id="L93">          + e.getMessage());</span>
-    }
-    try {
-<span class="fc" id="L96">      Transport.send(message);</span>
-<span class="fc" id="L97">    } catch (MessagingException e) {</span>
-<span class="fc" id="L98">      throw new ActionException(&quot;SendEmail - Unable to send the message: &quot; + e.getMessage());</span>
-    }
-<span class="fc" id="L100">  }</span>
+<span class="fc" id="L80">      this.mailSender.send(message);</span>
+<span class="fc" id="L81">    } catch (MailException e) {</span>
+<span class="fc" id="L82">      throw new ActionException(&quot;SendEmail - Unable to send the message: &quot; + e.getMessage());</span>
+<span class="fc" id="L83">    }</span>
+<span class="fc" id="L84">  }</span>
 
   /**
    * New instance of SendEmail.
-   * @param session An instance of class Session that contains a connection to the mail server
+   * @param mailSender An instance of class JavaMailSender that contains a connection to the mail server
    * @param fromAddress The email address to use in the message's from header
    * @since 1.0
    */
-<span class="fc" id="L108">  public SendEmail(Session session, InternetAddress fromAddress) {</span>
-<span class="fc" id="L109">    this.session = session;</span>
-<span class="fc" id="L110">    this.fromAddress = fromAddress;</span>
-<span class="fc" id="L111">    parameters = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L112">  }</span>
+<span class="fc" id="L92">  public SendEmail(JavaMailSender mailSender, InternetAddress fromAddress) {</span>
+<span class="fc" id="L93">    this.mailSender = mailSender;</span>
+<span class="fc" id="L94">    this.fromAddress = fromAddress;</span>
+<span class="fc" id="L95">    parameters = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L96">  }</span>
 
   /**
    * Indicates whether some other object is &quot;equal to&quot; this one.
@@ -119,11 +103,11 @@ public class SendEmail implements Action {
    */
   @Override
 	public boolean equals(Object o) {
-<span class="fc bfc" id="L122" title="All 2 branches covered.">    if (this == o) return true;</span>
-<span class="fc bfc" id="L123" title="All 4 branches covered.">		if (o == null || getClass() != o.getClass()) return false;</span>
-<span class="fc" id="L124">		SendEmail sendEmail = (SendEmail)o;</span>
-<span class="fc bfc" id="L125" title="All 2 branches covered.">    return Objects.equals(parameters, sendEmail.parameters)</span>
-<span class="fc bfc" id="L126" title="All 2 branches covered.">      &amp;&amp; Objects.equals(fromAddress, sendEmail.fromAddress);</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">    if (this == o) return true;</span>
+<span class="fc bfc" id="L107" title="All 4 branches covered.">		if (o == null || getClass() != o.getClass()) return false;</span>
+<span class="fc" id="L108">		SendEmail sendEmail = (SendEmail)o;</span>
+<span class="fc bfc" id="L109" title="All 2 branches covered.">    return Objects.equals(parameters, sendEmail.parameters)</span>
+<span class="fc bfc" id="L110" title="All 2 branches covered.">      &amp;&amp; Objects.equals(fromAddress, sendEmail.fromAddress);</span>
   }
 
   /**
@@ -133,7 +117,7 @@ public class SendEmail implements Action {
    */
   @Override
 	public int hashCode() {
-<span class="fc" id="L136">    return Objects.hash(parameters, fromAddress);</span>
+<span class="fc" id="L120">    return Objects.hash(parameters, fromAddress);</span>
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

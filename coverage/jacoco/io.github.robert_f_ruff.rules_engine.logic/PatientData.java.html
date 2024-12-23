@@ -4,36 +4,28 @@ import java.nio.CharBuffer;
 import java.time.LocalDate;
 import java.util.Objects;
 
-import jakarta.json.bind.annotation.JsonbCreator;
-import jakarta.json.bind.annotation.JsonbProperty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Past;
-
 /**
  * Defines the data associated with a patient.
  * @author Robert F. Ruff
- * @version 1.0
+ * @version 1.1
  */
 public class PatientData {
   /**
    * Identifies the possible biological genders of a patient.
    * @since 1.0
    */
-<span class="fc" id="L22">  public static enum Gender {</span>
-<span class="fc" id="L23">    /**</span>
+<span class="fc" id="L17">  public static enum Gender {</span>
+    /**
      * Birth sex male
      */
-<span class="fc" id="L26">    MALE,</span>
-<span class="fc" id="L27">    /**</span>
+<span class="fc" id="L21">    MALE,</span>
+    /**
      * Birth sex female
      */
-<span class="fc" id="L30">    FEMALE</span>
+<span class="fc" id="L25">    FEMALE</span>
   }
 
-  @NotNull
   private Gender gender;
-  @NotNull
-  @Past
   private LocalDate birthDate;
 
   /**
@@ -42,7 +34,7 @@ public class PatientData {
    * @since 1.0
    */
   public Gender getGender() {
-<span class="fc" id="L45">    return gender;</span>
+<span class="fc" id="L37">    return gender;</span>
   }
 
   /**
@@ -51,7 +43,7 @@ public class PatientData {
    * @since 1.0
    */
   public LocalDate getBirthDate() {
-<span class="fc" id="L54">    return birthDate;</span>
+<span class="fc" id="L46">    return birthDate;</span>
   }
 
   /**
@@ -60,21 +52,19 @@ public class PatientData {
    * @param birthDate The date the patient was born, formatted as {@code YYYY-MM-DD}
    * @since 1.0
    */
-  @JsonbCreator
-<span class="fc" id="L64">  public PatientData(@JsonbProperty(&quot;gender&quot;) Gender gender,</span>
-      @JsonbProperty(&quot;birthDate&quot;) String birthDate) {
-<span class="fc" id="L66">    this.gender = gender;</span>
-<span class="fc" id="L67">    this.birthDate = LocalDate.parse(CharBuffer.wrap(birthDate.toCharArray()));</span>
-<span class="fc" id="L68">  }</span>
+<span class="fc" id="L55">  public PatientData(Gender gender, String birthDate) {</span>
+<span class="fc" id="L56">    this.gender = gender;</span>
+<span class="fc" id="L57">    this.birthDate = LocalDate.parse(CharBuffer.wrap(birthDate.toCharArray()));</span>
+<span class="fc" id="L58">  }</span>
 
   /**
    * New instance of PatientData.
    * @since 1.0
    */
-<span class="fc" id="L74">  public PatientData() {</span>
-<span class="fc" id="L75">    this.gender = Gender.MALE;</span>
-<span class="fc" id="L76">    this.birthDate = LocalDate.now().plusDays(-1);</span>
-<span class="fc" id="L77">  }</span>
+<span class="fc" id="L64">  public PatientData() {</span>
+<span class="fc" id="L65">    this.gender = Gender.MALE;</span>
+<span class="fc" id="L66">    this.birthDate = LocalDate.now().plusDays(-1);</span>
+<span class="fc" id="L67">  }</span>
 
   /**
    * Indicates whether some other object is &quot;equal to&quot; this one.
@@ -84,11 +74,11 @@ public class PatientData {
    */
   @Override
 	public boolean equals(Object o) {
-<span class="fc bfc" id="L87" title="All 2 branches covered.">		if (this == o) return true;</span>
-<span class="fc bfc" id="L88" title="All 4 branches covered.">		if (o == null || getClass() != o.getClass()) return false;</span>
-<span class="fc" id="L89">		PatientData patientData = (PatientData)o;</span>
-<span class="fc bfc" id="L90" title="All 2 branches covered.">    return Objects.equals(gender, patientData.getGender())</span>
-<span class="fc bfc" id="L91" title="All 2 branches covered.">        &amp;&amp; Objects.equals(birthDate, patientData.getBirthDate());</span>
+<span class="fc bfc" id="L77" title="All 2 branches covered.">		if (this == o) return true;</span>
+<span class="fc bfc" id="L78" title="All 4 branches covered.">		if (o == null || getClass() != o.getClass()) return false;</span>
+<span class="fc" id="L79">		PatientData patientData = (PatientData)o;</span>
+<span class="fc bfc" id="L80" title="All 2 branches covered.">    return Objects.equals(gender, patientData.getGender())</span>
+<span class="fc bfc" id="L81" title="All 2 branches covered.">        &amp;&amp; Objects.equals(birthDate, patientData.getBirthDate());</span>
   }
 
   /**
@@ -98,7 +88,7 @@ public class PatientData {
    */
   @Override
 	public int hashCode() {
-<span class="fc" id="L101">		return Objects.hash(gender, birthDate);</span>
+<span class="fc" id="L91">		return Objects.hash(gender, birthDate);</span>
   }
 
   /**
@@ -108,7 +98,7 @@ public class PatientData {
 	 */
   @Override
   public String toString() {
-<span class="fc" id="L111">    return &quot;PatientData [gender=&quot; + gender + &quot;, birthDate=&quot; + birthDate + &quot;]&quot;;</span>
+<span class="fc" id="L101">    return &quot;PatientData [gender=&quot; + gender + &quot;, birthDate=&quot; + birthDate + &quot;]&quot;;</span>
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -89,10 +89,10 @@ public class Rule {
 <span class="fc" id="L89">		boolean applicable = false;</span>
 		// AND all criteria together
 <span class="fc bfc" id="L91" title="All 2 branches covered.">		for (Criterion criterion : criteria) {</span>
-<span class="fc" id="L92">			applicable = (criterion.getResult() == true);</span>
+<span class="fc bfc" id="L92" title="All 2 branches covered.">			applicable = (criterion.getResult() == true);</span>
 			
 <span class="fc bfc" id="L94" title="All 2 branches covered.">			if (! applicable) break;</span>
-		}
+<span class="fc" id="L95">		}</span>
 
 <span class="fc" id="L97">		determinedApplicability = true;</span>
 <span class="fc" id="L98">		return applicable;</span>
@@ -113,8 +113,8 @@ public class Rule {
 <span class="fc" id="L113">				actions.get(sequenceNumber).execute();</span>
 <span class="fc" id="L114">			} catch (ActionException e) {</span>
 <span class="fc" id="L115">				throw new ActionException(&quot;Action #&quot; + sequenceNumber.toString() + &quot; - &quot; + e.getMessage());</span>
-			}
-		}
+<span class="fc" id="L116">			}</span>
+<span class="fc" id="L117">		}</span>
 <span class="fc" id="L118">	}</span>
 
 	/**
@@ -165,4 +165,4 @@ public class Rule {
 <span class="fc" id="L165">		return &quot;Rule [id=&quot; + id + &quot;, name=&quot; + name + &quot;]&quot;;</span>
 	}
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

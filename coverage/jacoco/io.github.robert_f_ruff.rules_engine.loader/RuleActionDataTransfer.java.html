@@ -5,7 +5,7 @@ import java.util.Objects;
 /**
  * Defines a single record returned from the database by the RuleActions named query.
  * @author Robert F. Ruff
- * @version 1.0
+ * @version 1.1
  */
 public class RuleActionDataTransfer {
   private Long ruleId;
@@ -77,12 +77,12 @@ public class RuleActionDataTransfer {
    * @param actionFunction Name of the class implementing the Action interface to execute
    * @param parameterName The name of a parameter for this action
    * @param parameterValue The value of this parameter
-   * @since 1.0
+   * @since 1.1
    */
-<span class="fc" id="L82">  public RuleActionDataTransfer(Long ruleId, Integer actionSequenceNumber, String actionName,</span>
-      String actionFunction, String parameterName, String parameterValue) {
+  public RuleActionDataTransfer(Long ruleId, Short actionSequenceNumber, String actionName,
+<span class="fc" id="L83">      String actionFunction, String parameterName, String parameterValue) {</span>
 <span class="fc" id="L84">    this.ruleId = ruleId;</span>
-<span class="fc" id="L85">    this.actionSequenceNumber = actionSequenceNumber;</span>
+<span class="fc" id="L85">    this.actionSequenceNumber = (int) actionSequenceNumber;</span>
 <span class="fc" id="L86">    this.actionName = actionName;</span>
 <span class="fc" id="L87">    this.actionFunction = actionFunction;</span>
 <span class="fc" id="L88">    this.parameterName = parameterName;</span>
@@ -116,7 +116,7 @@ public class RuleActionDataTransfer {
   @Override
 	public int hashCode() {
 <span class="fc" id="L118">    return Objects.hash(ruleId, actionSequenceNumber, actionName, actionFunction,</span>
-<span class="fc" id="L119">        parameterName, parameterValue);</span>
+        parameterName, parameterValue);
   }
 
   /**
@@ -127,9 +127,9 @@ public class RuleActionDataTransfer {
   @Override
   public String toString() {
 <span class="fc" id="L129">    return &quot;RuleActionDataTransfer [ruleId=&quot; + ruleId + &quot;, actionSequenceNumber=&quot;</span>
-<span class="fc" id="L130">        + actionSequenceNumber + &quot;, actionName=&quot; + actionName + &quot;, actionFunction=&quot;</span>
-<span class="fc" id="L131">        + actionFunction + &quot;, parameterName=&quot; + parameterName + &quot;, parameterValue=&quot;</span>
-<span class="fc" id="L132">        + parameterValue + &quot;]&quot;;</span>
+        + actionSequenceNumber + &quot;, actionName=&quot; + actionName + &quot;, actionFunction=&quot;
+        + actionFunction + &quot;, parameterName=&quot; + parameterName + &quot;, parameterValue=&quot;
+        + parameterValue + &quot;]&quot;;
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
