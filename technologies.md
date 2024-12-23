@@ -16,10 +16,9 @@ layout: default
 - [nginx](https://nginx.org/en/): an HTTP proxy server delivering static content for the frontend and providing access to the frontend application container.
 - [Gunicorn](https://docs.gunicorn.org/en/latest/index.html): a web server gateway interface (WSGI) providing communication between the nginx proxy server and the Django frontend application
 - [GreenMail](https://greenmail-mail-test.github.io/greenmail/#): an email platform, providing a window to view the final outcome of the engine's evaluation when applicable.
-- [WildFly](https://www.wildfly.org/): Java application server that runs the backend application
 
 ## Frameworks and Tools
-- [Jakarta EE](https://jakarta.ee/): Java framework specifications for dependency injection, REST services, and email
+- [Spring Boot](https://spring.io/): Java framework used for dependency injection, REST services, and email
 - [Maven](https://maven.apache.org/): project management tool used to build the backend
 - [JUnit 5](https://junit.org/junit5/): Java testing framework
 - [Mockito](https://site.mockito.org/): mocking framework for Java unit tests
